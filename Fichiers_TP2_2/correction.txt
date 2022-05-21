@@ -1,0 +1,55 @@
+Prénom et Nom: Roxane Dionne
+Numéro de dossier (NI): 536 919 108
+Temps de réalisation: 20h
+
+
+Fonctionnalités
+---------------
+
+/10: L'analyse indique le bon taux de compression
+      Commentaires:
+
+/10: L'analyse indique une décompression valide
+      Commentaires:
+
+/15: compression.trouver_paire_la_plus_frequente
+      Commentaires:
+
+/10: compression.remplacer_paire_par_symbole
+      Commentaires:
+
+/10: compression.compression_par_paires
+      Commentaires:
+
+/5:  compression.compresser
+      Commentaires:
+
+/10: decompression.remplacer_symbole_par_paire
+      Commentaires:
+
+/10: decompression.decompression_par_paires
+      Commentaires:
+
+/5:  decompression.decompresser
+      Commentaires:
+
+
+/5:  Respect de la décomposition fonctionnelle demandée
+      Commentaires:
+
+/10:  Qualité du code (noms de variables, style, commentaires).
+      Commentaires:
+
+
+
+Pénalités pour non-respect des consignes
+----------------------------------------
+
+
+
+Autres commentaires du correcteur
+---------------------------------
+
+
+
+Total: /100

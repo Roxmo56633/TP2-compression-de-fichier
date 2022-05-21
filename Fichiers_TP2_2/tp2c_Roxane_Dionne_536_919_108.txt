@@ -1,0 +1,187 @@
+; Section de la table des vecteurs d'interruption
+SECTION INTVEC
+
+B main
+
+codeDuTp        ASSIGN32 0x210000EA
+tableauDuTp     ASSIGN32 0xF,0xF0,0xF00,0xF000,0x0
+tableau2DuTp    ASSIGN32 0x5,0x50,0x500,0x5000,0x5,0x0
+
+tableauTestDuTp    ASSIGN32 0x3,0x30,0x300,0x3000,0x30000,0x3,0x0
+; Ne pas enlever cette ligne : ${TEST_5_DATA}
+
+; Section du code principal
+SECTION CODE
+
+variableDuTp    ASSIGN32 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF
+
+main
+
+; Question 1
+; Écrivez un programme qui écrit la valeur 0xAB (sur 32 bits)
+; à l'adresse 0x84 en mémoire.
+;
+; Important: n'utilisez pas d'instructions relatives à PC.
+;
+; Écrivez votre réponse ici:
+MOV R0, #0x84
+MOV R1, #0xAB
+STR R1, [R0]
+
+; ----------------------------------------------------------------------
+; Début du code de correction pour le test Q1
+; ----------------------------------------------------------------------
+NOP
+ASSERT 0x0080=0xFFFFFFFF
+ASSERT 0x0084=0xAB,0x0085=0x00,0x0086=0x00,0x0087=0x00
+ASSERT 0x0088=0xFFFFFFFF
+NOP
+; ----------------------------------------------------------------------
+; Fin du code de correction pour le test Q1
+; ----------------------------------------------------------------------
+
+; Ne pas enlever cette ligne: ${TEST_1}
+
+; Question 2
+; Écrivez un programme qui:
+; 1. Déclare une variable «maVariableAssignee» sur 32 bits et lui assigne
+;    la valeur 0x12345678. Placez cette variable dans la section DATA ci-bas.
+; 2. Lit cette variable et lui soustrait 0x70.
+; 3. Stocke le résultat dans «maVariableAssignee».
+;
+; Important:
+; 1. N'utilisez pas d'instructions relatives à PC.
+; 2. La variable «maVariableAssignee» doit être le premier élément de la
+;    section DATA
+;
+; Écrivez votre réponse ici:
+LDR R0, maVariableAssignee
+LDR R1, =maVariableAssignee
+SUB R0, R0, #0x70
+STR R0, [R1]
+
+; ----------------------------------------------------------------------
+; Début du code de correction pour le test Q2
+; ----------------------------------------------------------------------
+NOP
+ASSERT 0x1000=0x08, 0x1001=0x56, 0x1002=0x34, 0x1003=0x12
+NOP
+; ----------------------------------------------------------------------
+; Fin du code de correction pour le test Q2
+; ----------------------------------------------------------------------
+
+; Ne pas enlever cette ligne: ${TEST_2}
+
+; Question 3
+; Écrivez un programme qui:
+; 1. Déclare une variable «maVariableAllouee» sur 32 bits sans lui attribuer de
+;    valeur. Placez cette variable dans la section DATA ci-bas, *en-dessous*
+;    de «maVariableAssignee» de la question 2.
+; 2. Copie le contenu de la mémoire à l'adresse 0 dans cette variable.
+;
+; Important: n'utilisez pas d'instructions relatives à PC.
+;
+; Écrivez votre réponse ici:
+MOV R0, #0x0
+LDR R1, [R0]
+LDR R0, =maVariableAllouee
+STR R1, [R0]
+
+
+; ----------------------------------------------------------------------
+; Début du code de correction pour le test Q3
+; ----------------------------------------------------------------------
+NOP
+ASSERT 0x1004=0x21, 0x1005=0x00, 0x1006=0x00, 0x1007=0xea
+NOP
+; ----------------------------------------------------------------------
+; Fin du code de correction pour le test Q3
+; ----------------------------------------------------------------------
+
+; Ne pas enlever cette ligne: ${TEST_3}
+
+
+; Question 4
+; Écrivez un programme qui:
+; 1. Charge le contenu de la mémoire à l'adresse 0x0 dans R0
+; 2. Charge le contenu de la mémoire à l'adresse 0x8 dans R1
+; 3. Place 1 dans R7 si le contenu de R0 est égal à celui de R1,
+;    et 2 s'il ne l'est pas.
+;
+; Important: n'utilisez pas d'instructions relatives à PC.
+;
+; Écrivez votre réponse ici:
+MOV R0, #0x0
+LDR R0, [R0]
+MOV R1, #0x8
+LDR R1, [R1]
+
+CMP R0, R1
+MOVEQ R7, #1
+MOVNE R7, #2
+
+; ----------------------------------------------------------------------
+; Début du code de correction pour le test Q4
+; ----------------------------------------------------------------------
+NOP
+ASSERT R7=0x2
+NOP
+; ----------------------------------------------------------------------
+; Fin du code de correction pour le test Q4
+; ----------------------------------------------------------------------
+
+; Ne pas enlever cette ligne: ${TEST_4}
+
+; Question 5
+; Écrivez un programme qui calcule la somme des éléments d'un tableau
+; jusqu'à ce qu'il rencontre la valeur « 0 », ce qui indique la fin du tableau.
+; Le programme stocke ensuite le résultat dans R8.
+; Important:
+; 1. Vous *devez* utiliser une boucle.
+; 2. Pour les branchements, utilisez l'instruction Branch (B, BEQ, etc.)
+;    plutôt que d'affecter une valeur à PC (ex: MOV PC, ...)
+; 3. Votre code doit boucler jusqu'à ce qu'il rencontre la valeur 0.
+; 4. Testez votre code sur les deux tableaux fournis. La seule modification
+;    nécessaire devrait être le choix de la variable dans la ligne suivante :
+
+LDR R0, =tableauDuTp
+LDR R0, =tableau2DuTp ; retirez le commentaire pour tester avec tableau2DuTp
+
+LDR R0, =tableauTestDuTp
+; Ne pas enlever cette ligne: ${TEST_5_PRE}
+
+; Écrivez votre réponse ici:
+MOV R8, #0
+debutBoucle
+LDR R1, [R0], #4
+
+CMP R1, #0
+BEQ finBoucle
+
+ADD R8, R8, R1
+B debutBoucle
+finBoucle
+; ----------------------------------------------------------------------
+; Début du code de correction pour le test Q5
+; ----------------------------------------------------------------------
+NOP
+ASSERT R8=0x00033336
+NOP
+MOV PC, #0x1; Ajout de cette instruction pour forcer l'arrêt de la simulation
+; ----------------------------------------------------------------------
+; Fin du code de correction pour le test Q5
+; ----------------------------------------------------------------------
+
+; Ne pas enlever cette ligne: ${TEST_5}
+
+; Fin du programme
+fin
+B fin
+
+; Section des données
+SECTION DATA
+; Écrivez vos variables maVariableAssignee et maVariableAllouee ici:
+maVariableAssignee ASSIGN32 0x12345678
+maVariableAllouee ALLOC32 1
+
+END
